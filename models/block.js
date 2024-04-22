@@ -48,6 +48,7 @@ BlockSchema.statics.byHash = function byHash(hash) {
 };
 
 BlockSchema.statics.getRawBlock = function getRawBlock(hash) {
+  /*
   return new Promise((res, rej) => {
     return this.model('Block').findOne(
       { hash },
@@ -55,6 +56,16 @@ BlockSchema.statics.getRawBlock = function getRawBlock(hash) {
       (err, block) => {
         return err ? rej(err) : res(Buffer.from(block.rawBlock, 'hex'));
       });
+  });
+  */
+
+  return new Promise((res, rej) => {
+    return this.model('Block').findOne(
+      { hash },
+      { rawBlock: 1 }
+    ).catch(err => rej(err)).then((block) => {
+      return res(Buffer.from(block.rawBlock, 'hex'));
+    });
   });
 };
 
@@ -89,6 +100,7 @@ BlockSchema.statics.getBlockHeightByHash = function getBlockHeightByHash(hash) {
 };
 
 BlockSchema.statics.getBlockHashByHeight = function getBlockHashByHeight(height) {
+  /*
   return new Promise((res, rej) => {
     return this.model('Block').findOne(
       { height },
@@ -97,12 +109,24 @@ BlockSchema.statics.getBlockHashByHeight = function getBlockHashByHeight(height)
           if (err) {
             rej(err);
           }
-        return block === null ? res(block) : res(Buffer.from(block.hash, 'hex'));
+        return block === null ? res(block)
+          : res(Buffer.from(block.hash, 'hex'));
+      });
+  });
+  */
+  return new Promise((res, rej) => {
+    return this.model('Block').findOne(
+      { height },
+      { hash: 1 }
+    ).catch(err => rej(err)).then((block) => {
+        return block === null ? res(block)
+          : res(Buffer.from(block.hash, 'hex'));
       });
   });
 };
 
 BlockSchema.statics.updateNextBlock = function updateNextBlock(hash, nextHash) {
+  /*
   return this.model('Block').findOne(
     {hash: hash},
     (err, block) => {
@@ -112,9 +136,19 @@ BlockSchema.statics.updateNextBlock = function updateNextBlock(hash, nextHash) {
       }
     }
   );
+*/
+  return new Promise((res, rej) => {
+    return this.model('Block').findOne(
+      {hash: hash},
+    ).catch(err => rej(err)).then((block) => {
+      block.nextBlockHash = nextHash;
+      return block.save();
+    });
+  });
 };
 
 BlockSchema.statics.getNextHash = function getNextHash(hash) {
+  /*
   return new Promise((res, rej) => {
     return this.model('Block').findOne(
       { hash: hash },
@@ -129,6 +163,18 @@ BlockSchema.statics.getNextHash = function getNextHash(hash) {
         }
       }
     );
+  });
+  */
+  return new Promise((res, rej) => {
+    return this.model('Block').findOne(
+      { hash: hash }
+    ).catch(err => rej(err)).then((block) => {
+      if (!block) {
+        rej('Couldn\'t find getNextHash');
+      }
+      return block === null ? res(block)
+        : res(block.nextBlockHash);
+    });
   });
 };
 

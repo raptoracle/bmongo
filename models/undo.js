@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const util = require('./util');
+// const util = require('./util');
 
 const Schema = mongoose.Schema;
 
@@ -19,6 +19,7 @@ UndoSchema.statics.saveUndoCoins = function saveUndoCoins(key, data) {
 };
 
 UndoSchema.statics.getUndoCoins = function getUndoCoins(key) {
+  /*
   return new Promise((res, rej) => {
     return this.model('Undo').findOne({ key },
       (err, coins) => {
@@ -27,6 +28,15 @@ UndoSchema.statics.getUndoCoins = function getUndoCoins(key) {
         }
         return coins ? res(coins.data) : res(coins);
       });
+  });
+  */
+
+  return new Promise((res, rej) => {
+    return this.model('Undo').findOne(
+      { key }
+    ).catch(err => rej(err)).then((coins) => {
+      return coins ? res(coins.data) : res(coins);
+    });
   });
 };
 

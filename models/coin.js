@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const util = require('./util');
+// const util = require('./util');
 
 const Schema = mongoose.Schema;
 
@@ -51,6 +51,7 @@ CoinSchema.statics.saveCoins = function saveCoins(key, data, coin, hash, index) 
 };
 
 CoinSchema.statics.getCoins = function getCoins(key) {
+  /*
   return new Promise((res, rej) => {
     return this.model('Coin').findOne({ key },
     (err, coins) => {
@@ -60,6 +61,15 @@ CoinSchema.statics.getCoins = function getCoins(key) {
       return coins ? res(coins.data) : res(coins);
     });
   });
+*/
+
+return new Promise((res, rej) => {
+  return this.model('Coin').findOne(
+    { key }
+  ).catch(err => rej(err)).then((coins) => {
+    return coins ? res(coins.data) : res(coins);
+  });
+});
 };
 
 CoinSchema.statics.hasCoins = function hasCoins(key) {

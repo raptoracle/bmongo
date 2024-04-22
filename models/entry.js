@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const util = require('./util');
+// const util = require('./util');
 
 const Schema = mongoose.Schema;
 
@@ -31,6 +31,7 @@ EntrySchema.statics.getEntries = function getEntries() {
 };
 
 EntrySchema.statics.getEntryByHash = function getEntryByHash(hash) {
+  /*
   return new Promise((res, rej) => {
     return this.model('Entry').findOne(
       { hash: hash },
@@ -42,9 +43,18 @@ EntrySchema.statics.getEntryByHash = function getEntryByHash(hash) {
       }
     );
   });
+  */
+  return new Promise((res, rej) => {
+    return this.model('Entry').findOne(
+      { hash: hash }
+    ).catch(err => rej(err)).then((entry) => {
+      return entry ? res(entry.data) : res(null);
+    });
+  });
 };
 
 EntrySchema.statics.getEntryByHeight = function getEntryByHeight(height) {
+  /*
   return new Promise((res, rej) => {
     return this.model('Entry').findOne(
       { height: height },
@@ -56,9 +66,18 @@ EntrySchema.statics.getEntryByHeight = function getEntryByHeight(height) {
       }
     );
   });
+  */
+  return new Promise((res, rej) => {
+    return this.model('Entry').findOne(
+      { height: height }
+    ).catch(err => rej(err)).then((entry) => {
+      return res(entry.data);
+    });
+  });
 };
 
 EntrySchema.statics.getEntryHashByHeight = function getEntryHashByHeight(height) {
+  /*
   return new Promise((res, rej) => {
     return this.model('Entry').findOne(
       { height: height },
@@ -69,6 +88,14 @@ EntrySchema.statics.getEntryHashByHeight = function getEntryHashByHeight(height)
         res(entry.hash);
       }
     );
+  });
+  */
+  return new Promise((res, rej) => {
+    return this.model('Entry').findOne(
+      { height: height }
+    ).catch(err => rej(err)).then((entry) => {
+      return res(entry.hash);
+    });
   });
 };
 

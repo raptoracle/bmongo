@@ -1,10 +1,10 @@
-# bcoin-mongo-api
+# bmongo
 Mongodb api for Bcoin. Replacement for bcoin-mongo-models.
 
 # Example:
 
 ```
-const DB = require('bcoin-mongo-api');
+const DB = require('bmongo');
 const bcoin = require('bcoin');
 
 const FullNode = bcoin.fullnode;

@@ -23,6 +23,7 @@ AddressSchema.statics.saveAddress = function saveAddress(key, addr, hash, idx) {
 };
 
 AddressSchema.statics.getAddress = function getAddress(key) {
+  /*
   return new Promise((res, rej) => {
     return this.model('Address').findOne({ key },
       (err, addr) => {
@@ -31,6 +32,14 @@ AddressSchema.statics.getAddress = function getAddress(key) {
         }
         return res(addr.key);
       });
+  });
+  */
+  return new Promise((res, rej) => {
+    return this.model('Address').findOne(
+      { key }
+    ).catch(err => rej(err)).then((addr) => {
+      return res(addr.key);
+    });
   });
 };
 

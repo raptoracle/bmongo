@@ -1,6 +1,6 @@
 {
-  "name": "bcoin-mongo-api",
-  "version": "1.0.1",
+  "name": "bmongo",
+  "version": "2.0.0",
   "description": "Mongodb api for Bcoin",
   "main": "index.js",
   "scripts": {
@@ -8,22 +8,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tenthirtyone/bcoin-mongo-models.git"
+    "url": "git+https://github.com/raptoracle/bmongo.git"
   },
   "author": "Alex Sherbuck",
   "contributors": [
     {
-      "name": "Gordon Hall",
-      "email": "",
-      "url": ""
+      "name": "Gordon Hall"
+    },
+    {
+      "name": "socialruins"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tenthirtyone/bcoin-mongo-models/issues"
+    "url": "https://github.com/raptoracle/bmongo/issues"
   },
-  "homepage": "https://github.com/tenthirtyone/bcoin-mongo-models#readme",
+  "homepage": "https://github.com/raptoracle/bmongo#readme",
   "dependencies": {
-    "mongoose": "^4.13.2"
+    "mongoose": "^8.3.2"
   }
 }

@@ -75,11 +75,7 @@ TransactionSchema.statics.saveBcoinTx = function saveBcoinTx(entry, tx, meta)  {
     meta:                meta.toRaw(),
     raw:                 tx.toRaw()
   });
-  t.save((err) => {
-    if (err) {
-      console.log(err);
-    }
-  });
+  t.save().catch(err => console.log(err));
 };
 
 TransactionSchema.statics.deleteBcoinTx = function deleteBcoinTx(txid) {
@@ -117,6 +113,7 @@ TransactionSchema.statics.has = function has(txid) {
 };
 
 TransactionSchema.statics.getTxMeta = function getTxMeta(txid)  {
+  /*
   return new Promise((res, rej) => {
     return this.model('Transaction').findOne(
       { txid: util.revHex(txid) },
@@ -126,6 +123,19 @@ TransactionSchema.statics.getTxMeta = function getTxMeta(txid)  {
           res(null);
         } else {
           err ? rej(err) : res(Buffer.from(tx.meta, 'hex'));
+        }
+      });
+  });
+  */
+  return new Promise((res, rej) => {
+    return this.model('Transaction').findOne(
+      { txid: util.revHex(txid) },
+      { meta: 1 }
+    ).catch(err => rej(err)).then((tx) => {
+        if (tx === null  || tx.meta === null) {
+          res(null);
+        } else {
+          tx ? res(Buffer.from(tx.meta, 'hex')) : rej('Couldn\'t getTxMeta');
         }
       });
   });
