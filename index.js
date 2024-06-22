@@ -33,7 +33,6 @@ mongoDB.prototype.open = async function () {
   console.log('Opening MongoDB Connection');
 
   await mongoose.connect(this.connectionString, {
-    useMongoClient: true,
     minPoolSize: 1,
     maxPoolSize: 100,
   });
