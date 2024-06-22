@@ -34,7 +34,8 @@ mongoDB.prototype.open = async function () {
 
   await mongoose.connect(this.connectionString, {
     useMongoClient: true,
-    poolSize: 9999999
+    minPoolSize: 1,
+    maxPoolSize: 100,
   });
   console.log(`MongoDB Connected @ ${this.connectionString}`);
   this.loaded = true;
