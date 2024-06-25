@@ -93,8 +93,6 @@ BlockSchema.statics.getBlockHashByHeight = async function getBlockHashByHeight(h
     { hash: 1 }
   );
 
-  console.log(block);
-
   if(block != null)
     return Buffer.from(block.hash, 'hex');
 };

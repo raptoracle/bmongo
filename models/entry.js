@@ -53,7 +53,7 @@ EntrySchema.statics.getEntryHashByHeight = async function getEntryHashByHeight(h
     { height: height }
   );
   if(entry != null)
-    return entry.hash;
+    return Buffer.from(entry.hash, 'hex');
 };
 
 module.exports = EntrySchema;
