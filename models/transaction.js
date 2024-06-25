@@ -52,8 +52,8 @@ TransactionSchema.statics.saveBcoinTx = async function saveBcoinTx(entry, tx, me
     ps:                  txJSON.ps,
     blockHeight:         txJSON.height,
     blockHash:           meta.hash,
-    blockTime:           meta.time * 1000,
-    blockTimeNormalized: meta.time * 1000,
+    blockTime:           txJSON.time * 1000,
+    blockTimeNormalized: txJSON.time * 1000,
     index:               txJSON.index,
     version:             txJSON.version,
     flag:                txJSON.flag,
@@ -77,9 +77,7 @@ TransactionSchema.statics.saveBcoinTx = async function saveBcoinTx(entry, tx, me
     raw:                 tx.toRaw()
   });
 
-  await t.save().then((err) => {
-    console.log(err);
-  });
+  await t.save();
 };
 
 TransactionSchema.statics.deleteBcoinTx = async function deleteBcoinTx(txid) {
