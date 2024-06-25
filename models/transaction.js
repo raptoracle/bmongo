@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 
 const TransactionSchema = new Schema({
   txid:                String,
-  witnessHash:         String,
+  type:                Number,
   fee:                 Number,
   rate:                Number,
   ps:                  Number,
@@ -38,6 +38,7 @@ TransactionSchema.index({ blockTimeNormalized: 1 });
 TransactionSchema.index({ 'inputs.address': 1 });
 TransactionSchema.index({ 'outputs.address': 1 });
 TransactionSchema.index({ mempool: 1 });
+TransactionSchema.index({ type: 1});
 
 TransactionSchema.statics.saveBcoinTx = function saveBcoinTx(entry, tx, meta)  {
   const Transaction = this.model('Transaction');
@@ -45,14 +46,14 @@ TransactionSchema.statics.saveBcoinTx = function saveBcoinTx(entry, tx, meta)  {
 
   const t = new Transaction({
     txid:                txJSON.hash,
-    witnessHash:         txJSON.witnessHash,
+    type:                txJSON.type,
     fee:                 txJSON.fee,
     rate:                txJSON.rate,
     ps:                  txJSON.ps,
-    blockHeight:         entry.height,
-    blockHash:           entry.hash,
-    blockTime:           entry.time/1000,
-    blockTimeNormalized: entry.time/1000,
+    blockHeight:         txJSON.height,
+    blockHash:           meta.hash,
+    blockTime:           meta.time * 1000,
+    blockTimeNormalized: meta.time * 1000,
     index:               txJSON.index,
     version:             txJSON.version,
     flag:                txJSON.flag,

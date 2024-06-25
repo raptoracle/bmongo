@@ -79,10 +79,16 @@ Batch.prototype.write = function write(callback) {
   for (const op of this.ops) {
     switch (op.type) {
       case 'put':
-        this.db.insert(op.key, op.value);
+        //this.db.insert(op.key, op.value);
+        this.db.insertOne({[op.key]: op.value}, (err, res) => {
+          if (err) throw err;
+        });
         break;
       case 'del':
-        this.db.remove(op.key);
+        //this.db.remove(op.key);
+        this.db.deleteOne({[op.key]: op.value}, (err, res) => {
+          if (err) throw err;
+        })
         break;
       default:
         setImmediate(() => callback(new Error('Bad op.')));
