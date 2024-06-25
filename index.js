@@ -58,8 +58,8 @@ mongoDB.prototype.getTipHash = async function () {
   return await Meta.getTipHash();
 };
 
-mongoDB.prototype.setTipHash = function (hash, cb) {
-  return Meta.setTipHash(hash, (err) => {
+mongoDB.prototype.setTipHash = async function (hash, cb) {
+  return await Meta.setTipHash(hash, (err) => {
     if (err) {
       return cb(err);
     }
@@ -75,163 +75,163 @@ mongoDB.prototype.getChainOptions = async function getChainOptions() {
 };
 
 mongoDB.prototype.saveEntry = async function saveEntry(hash, height, entry) {
-  return Entry.saveEntry(hash, height, entry);
+  return await Entry.saveEntry(hash, height, entry);
 };
 
-mongoDB.prototype.deleteEntry = function deleteEntry(hash) {
-  return Entry.deleteEntry(hash);
+mongoDB.prototype.deleteEntry = async function deleteEntry(hash) {
+  return await Entry.deleteEntry(hash);
 };
 
-mongoDB.prototype.getEntries = function getEntries() {
-  return Entry.getEntries();
+mongoDB.prototype.getEntries = async function getEntries() {
+  return await Entry.getEntries();
 };
 
 mongoDB.prototype.getEntryByHash = async function getEntryByHash(hash) {
-  return Entry.getEntryByHash(hash);
+  return await Entry.getEntryByHash(hash);
 };
 
 mongoDB.prototype.getEntryByHeight = async function getEntryByHeight(height) {
-  return Entry.getEntryByHeight(height);
+  return await Entry.getEntryByHeight(height);
 };
 
 mongoDB.prototype.getEntryHashByHeight = async function getEntryHashByHeight(height) {
-  return Entry.getEntryHashByHeight(height);
+  return await Entry.getEntryHashByHeight(height);
 };
 
 mongoDB.prototype.getBlockHeightByHash = async function getBlockHeightByHash(hash) {
-  return Block.getBlockHeightByHash(hash);
+  return await Block.getBlockHeightByHash(hash);
 };
 
 mongoDB.prototype.getBlockHashByHeight = async function getBlockHashByHeight(height) {
-  return Block.getBlockHashByHeight(height);
+  return await Block.getBlockHashByHeight(height);
 };
 
-mongoDB.prototype.updateNextBlock = function updateNextBlock(hash, nextHash) {
-  return Block.updateNextBlock(hash, nextHash);
+mongoDB.prototype.updateNextBlock = async function updateNextBlock(hash, nextHash) {
+  return await Block.updateNextBlock(hash, nextHash);
 };
 
-mongoDB.prototype.getNextHash = function getNextHash(hash) {
-  return Block.getNextHash(hash);
+mongoDB.prototype.getNextHash = async function getNextHash(hash) {
+  return await Block.getNextHash(hash);
 };
 
 mongoDB.prototype.saveTip = async function saveTip(hash, height) {
-  return Tip.saveTip(hash, height);
+  return await Tip.saveTip(hash, height);
 };
 
 mongoDB.prototype.removeTip = async function removeTip(hash) {
-  return Tip.removeTip(hash);
+  return await Tip.removeTip(hash);
 };
 
 mongoDB.prototype.getTips = async function getTips() {
-  return Tip.getTips();
+  return await Tip.getTips();
 };
 
-mongoDB.prototype.saveBcoinBlock = function saveBcoinBlock(entry, block) {
-  return Block.saveBcoinBlock(entry, block);
+mongoDB.prototype.saveBcoinBlock = async function saveBcoinBlock(entry, block) {
+  return await Block.saveBcoinBlock(entry, block);
 };
 
-mongoDB.prototype.deleteBcoinBlock = function deleteBcoinBlock(entry, block) {
-  return Block.deleteBcoinBlock(entry, block);
+mongoDB.prototype.deleteBcoinBlock = async function deleteBcoinBlock(entry, block) {
+  return await Block.deleteBcoinBlock(entry, block);
 };
 
-mongoDB.prototype.hasTx = function hasTx(hash) {
-  return Tx.has(hash);
+mongoDB.prototype.hasTx = async function hasTx(hash) {
+  return await Tx.has(hash);
 };
 
-mongoDB.prototype.getTxMeta = function getTxMeta(hash) {
-  return Tx.getTxMeta(hash);
+mongoDB.prototype.getTxMeta = async function getTxMeta(hash) {
+  return await Tx.getTxMeta(hash);
 };
 
-mongoDB.prototype.getHashesByAddress = function getHashesByAddress(addr) {
-  return Tx.getHashesByAddress(addr);
+mongoDB.prototype.getHashesByAddress = async function getHashesByAddress(addr) {
+  return await Tx.getHashesByAddress(addr);
 };
 
-mongoDB.prototype.getNextHash = function getNextHash(hash) {
-  return Block.getNextHash(hash);
+mongoDB.prototype.getNextHash = async function getNextHash(hash) {
+  return await Block.getNextHash(hash);
 };
 
-mongoDB.prototype.getBlockByHeight = function getBlockByHeight(height) {
-  return Block.byHeight(height);
+mongoDB.prototype.getBlockByHeight = async function getBlockByHeight(height) {
+  return await Block.byHeight(height);
 };
 
-mongoDB.prototype.setDeploymentBits = function setDeploymentBits(bits) {
-  return Meta.setDeploymentBits(bits);
+mongoDB.prototype.setDeploymentBits = async function setDeploymentBits(bits) {
+  return await Meta.setDeploymentBits(bits);
 };
 
-mongoDB.prototype.getDeploymentBits = function getDeploymentBits() {
-  return Meta.getDeploymentBits();
+mongoDB.prototype.getDeploymentBits = async function getDeploymentBits() {
+  return await Meta.getDeploymentBits();
 };
 
-mongoDB.prototype.getRawBlock = function getRawBlock(hash) {
-  return Block.getRawBlock(hash);
+mongoDB.prototype.getRawBlock = async function getRawBlock(hash) {
+  return await Block.getRawBlock(hash);
 };
 
-mongoDB.prototype.saveBcoinTx = function saveBcoinTx(entry, tx, meta) {
-  return Tx.saveBcoinTx(entry, tx, meta);
+mongoDB.prototype.saveBcoinTx = async function saveBcoinTx(entry, tx, meta) {
+  return await Tx.saveBcoinTx(entry, tx, meta);
 };
 
-mongoDB.prototype.deleteBcoinTx = function deleteBcoinTx(hash) {
-  return Tx.deleteBcoinTx(hash);
+mongoDB.prototype.deleteBcoinTx = async function deleteBcoinTx(hash) {
+  return await Tx.deleteBcoinTx(hash);
 };
 
-mongoDB.prototype.saveStateCache = function saveStateCache(key, value) {
-  return StateCache.saveStateCache(key, value);
+mongoDB.prototype.saveStateCache = async function saveStateCache(key, value) {
+  return await StateCache.saveStateCache(key, value);
 };
 
-mongoDB.prototype.getStateCaches = function getStateCaches() {
-  return StateCache.getStateCaches();
+mongoDB.prototype.getStateCaches = async function getStateCaches() {
+  return await StateCache.getStateCaches();
 };
 
-mongoDB.prototype.invalidateStateCache = function invalidateStateCache() {
-  return StateCache.invalidate();
+mongoDB.prototype.invalidateStateCache = async function invalidateStateCache() {
+  return await StateCache.invalidate();
 };
 
-mongoDB.prototype.saveCoins = function saveCoins(key, data, coin, hash, index) {
-  return Coin.saveCoins(key, data, coin, hash, index);
+mongoDB.prototype.saveCoins = async function saveCoins(key, data, coin, hash, index) {
+  return await Coin.saveCoins(key, data, coin, hash, index);
 };
 
-mongoDB.prototype.removeCoins = function removeCoins(key) {
-  return Coin.removeCoins(key);
+mongoDB.prototype.removeCoins = async function removeCoins(key) {
+  return await Coin.removeCoins(key);
 };
 
-mongoDB.prototype.getCoins = function getCoins(key) {
-  return Coin.getCoins(key);
+mongoDB.prototype.getCoins = async function getCoins(key) {
+  return await Coin.getCoins(key);
 };
 
-mongoDB.prototype.hasCoins = function hasCoins(key) {
-  return Coin.hasCoins(key);
+mongoDB.prototype.hasCoins = async function hasCoins(key) {
+  return await Coin.hasCoins(key);
 };
 
-mongoDB.prototype.hasDupeCoins = function hasDupeCoins(key, height) {
-  return Coin.hasDupeCoins(key, height);
+mongoDB.prototype.hasDupeCoins = async function hasDupeCoins(key, height) {
+  return await Coin.hasDupeCoins(key, height);
 };
 
-mongoDB.prototype.saveAddress = function saveAddress(key, addr, hash, idx) {
-  return Address.saveAddress(key, addr, hash, idx);
+mongoDB.prototype.saveAddress = async function saveAddress(key, addr, hash, idx) {
+  return await Address.saveAddress(key, addr, hash, idx);
 };
 
-mongoDB.prototype.getAddress = function getAddress(key) {
-  return Address.getAddress(key);
+mongoDB.prototype.getAddress = async function getAddress(key) {
+  return await Address.getAddress(key);
 };
 
-mongoDB.prototype.getAddressesByHash160 = function getAddressesByHash160(hash) {
-  return Address.getAddressesByHash160(hash);
+mongoDB.prototype.getAddressesByHash160 = async function getAddressesByHash160(hash) {
+  return await Address.getAddressesByHash160(hash);
 };
 
-mongoDB.prototype.removeAddress = function removeAddress(key) {
-  return Address.removeAddress(key);
+mongoDB.prototype.removeAddress = async function removeAddress(key) {
+  return await Address.removeAddress(key);
 };
 
-mongoDB.prototype.saveUndoCoins = function saveUndoCoins(key, data) {
-  return Undo.saveUndoCoins(key, data);
+mongoDB.prototype.saveUndoCoins = async function saveUndoCoins(key, data) {
+  return await Undo.saveUndoCoins(key, data);
 };
 
-mongoDB.prototype.getUndoCoins = function getUndoCoins(key) {
-  return Undo.getUndoCoins(key);
+mongoDB.prototype.getUndoCoins = async function getUndoCoins(key) {
+  return await Undo.getUndoCoins(key);
 };
 
-mongoDB.prototype.removeUndoCoins = function removeUndoCoins(key) {
-  return Undo.removeUndoCoins(key);
+mongoDB.prototype.removeUndoCoins = async function removeUndoCoins(key) {
+  return await Undo.removeUndoCoins(key);
 };
 
 mongoDB.prototype.reset = async function reset(height = 0) {
