@@ -7,7 +7,7 @@ const MAX_BLOCKS = 100;
 
 const BlockSchema = new Schema({
   network:           { type:  String, default:  '' },
-  mainChain:         { type:   Boolean, default: false },
+  mainChain:         { type:  Boolean, default: false },
   height:            { type:  Number, default:  0 },
   hash:              { type:  String, default:  '' },
   version:           { type:  Number, default:  0 },
@@ -16,7 +16,7 @@ const BlockSchema = new Schema({
   timeNormalized:    { type:  Date, default:    0 },
   nonce:             { type:  Number, default:  0 },
   previousBlockHash: { type:  String, default:  '' },
-  nextBlockHash:     { type:  Buffer, default:  '' },
+  nextBlockHash:     { type:  String, default:  '' },
   transactionCount:  { type:  Number, default:  1},
   size:              { type:  Number, default:  0 },
   bits:              { type:  Number, default:  0 },
@@ -39,54 +39,42 @@ BlockSchema.index({ timeNormalized: 1 });
 BlockSchema.index({ mainChain: 1 });
 BlockSchema.index({ previousBlockHash: 1, mainChain: 1 });
 
-BlockSchema.statics.byHeight = function byHeight(height) {
-  return this.model('Block').findOne({ height });
+BlockSchema.statics.byHeight = async function byHeight(height) {
+  return await this.model('Block').findOne({ height });
 };
 
-BlockSchema.statics.byHash = function byHash(hash) {
-  return this.model('Block').findOne({ hash });
+BlockSchema.statics.byHash = async function byHash(hash) {
+  return await this.model('Block').findOne({ hash });
 };
 
-BlockSchema.statics.getRawBlock = function getRawBlock(hash) {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Block').findOne(
-      { hash },
-      { rawBlock: 1 },
-      (err, block) => {
-        return err ? rej(err) : res(Buffer.from(block.rawBlock, 'hex'));
-      });
-  });
-  */
+BlockSchema.statics.getRawBlock = async function getRawBlock(hash) {
+  const block = await this.model('Block').findOne(
+    { hash },
+    { rawBlock: 1 }
+  );
 
-  return new Promise((res, rej) => {
-    return this.model('Block').findOne(
-      { hash },
-      { rawBlock: 1 }
-    ).catch(err => rej(err)).then((block) => {
-      return res(Buffer.from(block.rawBlock, 'hex'));
-    });
-  });
+  if(block != null)
+    return Buffer.from(block.rawBlock, 'hex');
 };
 
-BlockSchema.statics.last = function last(cb) {
-  return this.model('Block').find(
+BlockSchema.statics.last = async function last(cb) {
+  return await this.model('Block').find(
     {},
     cb)
     .limit(MAX_BLOCKS)
     .sort({ height: -1 });
 };
 
-BlockSchema.statics.getHeights = function getHeights(cb) {
-  return this.model('Block').find(
+BlockSchema.statics.getHeights = async function getHeights(cb) {
+  return await this.model('Block').find(
     {},
     { height: 1 },
     cb)
     .sort({ height: 1 });
 };
 
-BlockSchema.statics.tipHash =  function tipHash(cb)  {
-  return this.last((err, block) => {
+BlockSchema.statics.tipHash = async function tipHash(cb)  {
+  return await this.last((err, block) => {
     if (err) {
       return cb(err);
     }
@@ -95,96 +83,46 @@ BlockSchema.statics.tipHash =  function tipHash(cb)  {
     .limit(1);
 };
 
-BlockSchema.statics.getBlockHeightByHash = function getBlockHeightByHash(hash) {
-  return this.model('Block').findOne({ hash });
+BlockSchema.statics.getBlockHeightByHash = async function getBlockHeightByHash(hash) {
+  return await this.model('Block').findOne({ hash });
 };
 
-BlockSchema.statics.getBlockHashByHeight = function getBlockHashByHeight(height) {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Block').findOne(
-      { height },
-      { hash: 1 },
-        (err, block) => {
-          if (err) {
-            rej(err);
-          }
-        return block === null ? res(block)
-          : res(Buffer.from(block.hash, 'hex'));
-      });
-  });
-  */
-  return new Promise((res, rej) => {
-    return this.model('Block').findOne(
-      { height },
-      { hash: 1 }
-    ).catch(err => rej(err)).then((block) => {
-        return block === null ? res(block)
-          : res(Buffer.from(block.hash, 'hex'));
-      });
-  });
-};
-
-BlockSchema.statics.updateNextBlock = function updateNextBlock(hash, nextHash) {
-  /*
-  return this.model('Block').findOne(
-    {hash: hash},
-    (err, block) => {
-      if (!err && block) {
-        block.nextBlockHash = nextHash;
-        return block.save();
-      }
-    }
+BlockSchema.statics.getBlockHashByHeight = async function getBlockHashByHeight(height) {
+  const block = await this.model('Block').findOne(
+    { height },
+    { hash: 1 }
   );
-*/
-  return new Promise((res, rej) => {
-    return this.model('Block').findOne(
-      {hash: hash},
-    ).catch(err => rej(err)).then((block) => {
-      block.nextBlockHash = nextHash;
-      return block.save();
-    });
-  });
+
+  console.log(block);
+
+  if(block != null)
+    return Buffer.from(block.hash, 'hex');
 };
 
-BlockSchema.statics.getNextHash = function getNextHash(hash) {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Block').findOne(
-      { hash: hash },
-      (err, block) => {
-        if (err || !block) {
-          rej(err);
-        }
-        if (block === null) {
-          res(block);
-        } else {
-          res(block.nextBlockHash);
-        }
-      }
-    );
-  });
-  */
-  return new Promise((res, rej) => {
-    return this.model('Block').findOne(
-      { hash: hash }
-    ).catch(err => rej(err)).then((block) => {
-      if (!block) {
-        rej('Couldn\'t find getNextHash');
-      }
-      return block === null ? res(block)
-        : res(block.nextBlockHash);
-    });
-  });
+BlockSchema.statics.updateNextBlock = async function updateNextBlock(hash, nextHash) {
+  const block = await this.model('Block').findOneAndUpdate(
+    {hash: hash}, {nextBlockHash: nextHash}
+  );
+
+  return block;
 };
 
-BlockSchema.statics.saveBcoinBlock = function saveBcoinBlock(entry, block) {
+BlockSchema.statics.getNextHash = async function getNextHash(hash) {
+  const block = await this.model('Block').findOne(
+    {hash: hash}
+  );
+
+  if(block != null)
+    return block.nextBlockHash;
+};
+
+BlockSchema.statics.saveBcoinBlock = async function saveBcoinBlock(entry, block) {
   const Block     = this.model('Block');
   const rawBlock  = block.toRaw();
   const blockJSON = block.toJSON();
   const reward    = util.calcBlockReward(entry.height);
 
-  return new Block({
+  return await new Block({
     mainChain:         true,
     hash:              block.hash().toString('hex'),
     height:            entry.height,

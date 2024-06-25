@@ -12,91 +12,48 @@ const EntrySchema = new Schema({
 EntrySchema.index({ hash: 1 });
 EntrySchema.index({ height: 1 });
 
-EntrySchema.statics.saveEntry = function saveEntry(hash, height, entry) {
+EntrySchema.statics.saveEntry = async function saveEntry(hash, height, entry) {
   const Entry = this.model('Entry');
 
-  return new Entry({
+  return await new Entry({
     'hash': hash.toString('hex'),
     'height': height,
     'data': Buffer.from(entry, 'hex')
   }).save();
 };
 
-EntrySchema.statics.deleteEntry = function deleteEntry(hash) {
-  return this.model('Entry').find({ hash }).remove();
+EntrySchema.statics.deleteEntry = async function deleteEntry(hash) {
+  return await this.model('Entry').find({ hash }).remove();
 };
 
-EntrySchema.statics.getEntries = function getEntries() {
-  return this.model('Entry').find({});
+EntrySchema.statics.getEntries = async function getEntries() {
+  return await this.model('Entry').find({});
 };
 
-EntrySchema.statics.getEntryByHash = function getEntryByHash(hash) {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Entry').findOne(
-      { hash: hash },
-      (err, entry) => {
-        if (err) {
-          rej(err);
-        }
-        return entry ? res(entry.data) : res(null);
-      }
-    );
-  });
-  */
-  return new Promise((res, rej) => {
-    return this.model('Entry').findOne(
+EntrySchema.statics.getEntryByHash = async function getEntryByHash(hash) {
+    const entry = await this.model('Entry').findOne(
       { hash: hash }
-    ).catch(err => rej(err)).then((entry) => {
-      return entry ? res(entry.data) : res(null);
-    });
-  });
+    );
+
+    if(entry != null)
+      return entry.data;
 };
 
-EntrySchema.statics.getEntryByHeight = function getEntryByHeight(height) {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Entry').findOne(
-      { height: height },
-      (err, entry) => {
-        if (err) {
-          rej(err);
-        }
-        res(entry.data);
-      }
-    );
-  });
-  */
-  return new Promise((res, rej) => {
-    return this.model('Entry').findOne(
-      { height: height }
-    ).catch(err => rej(err)).then((entry) => {
-      return res(entry.data);
-    });
-  });
+EntrySchema.statics.getEntryByHeight = async function getEntryByHeight(height) {
+  const entry = await this.model('Entry').findOne(
+    { height: height }
+  );
+
+  if(entry != null)
+    return entry.data;
 };
 
-EntrySchema.statics.getEntryHashByHeight = function getEntryHashByHeight(height) {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Entry').findOne(
-      { height: height },
-      (err, entry) => {
-        if (err) {
-          rej(err);
-        }
-        res(entry.hash);
-      }
-    );
-  });
-  */
-  return new Promise((res, rej) => {
-    return this.model('Entry').findOne(
-      { height: height }
-    ).catch(err => rej(err)).then((entry) => {
-      return res(entry.hash);
-    });
-  });
+EntrySchema.statics.getEntryHashByHeight = async function getEntryHashByHeight(height) {
+  const entry = await this.model('Entry').findOne(
+    { height: height }
+  );
+  if(entry != null)
+    return entry.hash;
 };
 
 module.exports = EntrySchema;

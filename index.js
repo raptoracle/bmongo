@@ -41,7 +41,7 @@ mongoDB.prototype.open = async function () {
 };
 
 mongoDB.prototype.close = function () {
-  mongoose.disconnect(() => {
+  mongoose.disconnect().then(() => {
     console.log('Mongoose connection with DB disconnected through app termination');
   });
 };

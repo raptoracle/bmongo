@@ -20,7 +20,7 @@ TipSchema.statics.saveTip = function saveTip(hash, height) {
 };
 
 TipSchema.statics.removeTip = function removeTip(hash) {
-  return this.model('Tip').remove({ hash: hash });
+  return this.model('Tip').deleteOne({ hash: hash });
 };
 
 TipSchema.statics.getTips = function getTips() {
