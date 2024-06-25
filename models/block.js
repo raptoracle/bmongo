@@ -95,11 +95,14 @@ BlockSchema.statics.getBlockHashByHeight = async function getBlockHashByHeight(h
 
   if(block != null)
     return Buffer.from(block.hash, 'hex');
+
+  return block;
 };
 
 BlockSchema.statics.updateNextBlock = async function updateNextBlock(hash, nextHash) {
   const block = await this.model('Block').findOneAndUpdate(
-    {hash: hash}, {nextBlockHash: nextHash}
+    {hash: hash},
+    {nextBlockHash: nextHash}
   );
 
   return block;
@@ -112,6 +115,8 @@ BlockSchema.statics.getNextHash = async function getNextHash(hash) {
 
   if(block != null)
     return block.nextBlockHash;
+
+  return block;
 };
 
 BlockSchema.statics.saveBcoinBlock = async function saveBcoinBlock(entry, block) {
