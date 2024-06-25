@@ -146,7 +146,7 @@ BlockSchema.statics.saveBcoinBlock = async function saveBcoinBlock(entry, block)
 };
 
 BlockSchema.statics.deleteBcoinBlock = function deleteBcoinBlock(hash) {
-  return this.model('Block').find({ hash }).remove();
+  return this.model('Block').findOneAndDelete({ hash });
 };
 
 module.exports = BlockSchema;

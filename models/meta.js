@@ -25,25 +25,14 @@ MetaSchema.statics.setTipHash = function setTipHash(hash, cb) {
 
 MetaSchema.statics.getTipHash = async function getTipHash() {
   // Needs a preflight - if no document exists create a blank one
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Meta').findOne(
-      { 'idx': 0},
-      (err, meta) => {
-        const tipHash = meta ? meta.tipHash : null;
-        return err ? rej(err) : res(tipHash);
-      }
-    );
-  });
-  */
-  return new Promise((res, rej) => {
-    return this.model('Meta').findOne(
-      { 'idx': 0}
-    ).catch(err => rej(err)).then((meta) => {
-      const tipHash = meta ? meta.tipHash : null;
-      return res(tipHash);
-    });
-  });
+  const meta = this.model('Meta').findOne(
+    { 'idx': 0}
+  );
+
+  if(meta != null)
+    return meta.tipHash;
+
+  return null;
 };
 
 MetaSchema.statics.setChainOptions = function setChainOptions(options) {
@@ -57,25 +46,13 @@ MetaSchema.statics.setChainOptions = function setChainOptions(options) {
 };
 
 // Wrapped in Promise to change results before returning to async/await
-MetaSchema.statics.getChainOptions = function getChainOptions() {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Meta').findOne(
-      { 'idx': 0 },
-      (err, meta) => {
-        return err ? rej(err) : res(meta.chainOptions);
-      }
-    );
-  });
-  */
+MetaSchema.statics.getChainOptions = async function getChainOptions() {
+  const meta = this.model('Meta').findOne(
+    { 'idx': 0}
+  );
 
-  return new Promise((res, rej) => {
-    return this.model('Meta').findOne(
-      { 'idx': 0}
-    ).catch(err => rej(err)).then((meta) => {
-      return res(meta.chainOptions);
-    });
-  });
+  if(chainOptions != null)
+    return meta.chainOptions;
 };
 
 MetaSchema.statics.setDeploymentBits = function setDeploymentBits(bits) {
@@ -89,24 +66,12 @@ MetaSchema.statics.setDeploymentBits = function setDeploymentBits(bits) {
 };
 
 MetaSchema.statics.getDeploymentBits = function getDeploymentBits() {
-/*
-  return new Promise((res, rej) => {
-    return this.model('Meta').findOne(
-      { 'idx': 0 },
-      (err, meta) => {
-        return err ? rej(err) : res(meta.deploymentBits);
-      }
-    );
-  });
-  */
+  const meta = this.model('Meta').findOne(
+    { 'idx': 0}
+  );
 
-  return new Promise((res, rej) => {
-    return this.model('Meta').findOne(
-      { 'idx': 0}
-    ).catch(err => rej(err)).then((meta) => {
-      return res(meta.deploymentBits);
-    });
-  });
+  if(meta != null)
+    return meta.deploymentBits;
 };
 
 module.exports = MetaSchema;

@@ -10,38 +10,25 @@ const UndoSchema = new Schema({
 
 UndoSchema.index({ key: 1 });
 
-UndoSchema.statics.saveUndoCoins = function saveUndoCoins(key, data) {
+UndoSchema.statics.saveUndoCoins = async function saveUndoCoins(key, data) {
   const Undo = this.model('Undo');
-  return new Undo({
+  return await new Undo({
     key,
     data
   }).save();
 };
 
-UndoSchema.statics.getUndoCoins = function getUndoCoins(key) {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Undo').findOne({ key },
-      (err, coins) => {
-        if (err) {
-          return rej(err);
-        }
-        return coins ? res(coins.data) : res(coins);
-      });
-  });
-  */
+UndoSchema.statics.getUndoCoins = async function getUndoCoins(key) {
+  const coins = await this.model('Undo').findOne({ key });
 
-  return new Promise((res, rej) => {
-    return this.model('Undo').findOne(
-      { key }
-    ).catch(err => rej(err)).then((coins) => {
-      return coins ? res(coins.data) : res(coins);
-    });
-  });
+  if(coins != null)
+    return coins.data;
+
+  return coins;
 };
 
-UndoSchema.statics.removeUndoCoins = function removeUndoCoins(key) {
-  return this.model('Undo').find({ key }).remove();
+UndoSchema.statics.removeUndoCoins = async function removeUndoCoins(key) {
+  return await this.model('Undo').findOneAndDelete({ key });
 };
 
 module.exports = UndoSchema;

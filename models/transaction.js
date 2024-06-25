@@ -40,7 +40,7 @@ TransactionSchema.index({ 'outputs.address': 1 });
 TransactionSchema.index({ mempool: 1 });
 TransactionSchema.index({ type: 1});
 
-TransactionSchema.statics.saveBcoinTx = function saveBcoinTx(entry, tx, meta)  {
+TransactionSchema.statics.saveBcoinTx = async function saveBcoinTx(entry, tx, meta)  {
   const Transaction = this.model('Transaction');
   const txJSON = tx.toJSON();
 
@@ -76,70 +76,53 @@ TransactionSchema.statics.saveBcoinTx = function saveBcoinTx(entry, tx, meta)  {
     meta:                meta.toRaw(),
     raw:                 tx.toRaw()
   });
-  t.save().catch(err => console.log(err));
-};
 
-TransactionSchema.statics.deleteBcoinTx = function deleteBcoinTx(txid) {
-  return this.model('Transaction').find({ txid }).remove();
-};
-
-TransactionSchema.statics.getHashesByAddress = function getHashesByAddress(addr) {
-  return new Promise((res, rej) => {
-    return this.model('Transaction').find(
-      {
-        $or: [
-          { 'inputs.address': addr },
-          { 'outputs.address': addr }]
-      },
-      {
-        txid: 1
-      },
-        (err, txs) => {
-          err ? rej(err) : res(txs.map((tx) => {
-            return util.revHex(tx.txid);
-          }));
-        }
-    );
+  await t.save().then((err) => {
+    console.log(err);
   });
 };
 
-TransactionSchema.statics.has = function has(txid) {
-  return new Promise((res, rej) => {
-    return this.model('Transaction')
-      .findOne({ txid })
-      .count((err, count) => {
-        err ? rej(err) : res(count >= 1);
-      });
-  });
+TransactionSchema.statics.deleteBcoinTx = async function deleteBcoinTx(txid) {
+  return await this.model('Transaction').findAndDeleteOne({ txid });
 };
 
-TransactionSchema.statics.getTxMeta = function getTxMeta(txid)  {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Transaction').findOne(
-      { txid: util.revHex(txid) },
-      { meta: 1 },
-      (err, tx) => {
-        if (tx === null  || tx.meta === null) {
-          res(null);
-        } else {
-          err ? rej(err) : res(Buffer.from(tx.meta, 'hex'));
-        }
-      });
-  });
-  */
-  return new Promise((res, rej) => {
-    return this.model('Transaction').findOne(
-      { txid: util.revHex(txid) },
-      { meta: 1 }
-    ).catch(err => rej(err)).then((tx) => {
-        if (tx === null  || tx.meta === null) {
-          res(null);
-        } else {
-          tx ? res(Buffer.from(tx.meta, 'hex')) : rej('Couldn\'t getTxMeta');
-        }
-      });
-  });
+TransactionSchema.statics.getHashesByAddress = async function getHashesByAddress(addr) {
+  const transaction = await this.model('Transaction').find(
+    {
+      $or: [
+        { 'inputs.address': addr },
+        { 'outputs.address': addr }]
+    },
+    {
+      txid: 1
+    },
+      (err, txs) => {
+        err ? rej(err) : res(txs.map((tx) => {
+          return util.revHex(tx.txid);
+        }));
+      }
+  );
+
+  return transaction;
+
+};
+
+TransactionSchema.statics.has = async function has(txid) {
+  const count = await this.model('Transaction').count({ txid });
+  return count >= 1;
+};
+
+TransactionSchema.statics.getTxMeta = async function getTxMeta(txid)  {
+
+  const tx = this.model('Transaction').findOne(
+    { txid: util.revHex(txid) },
+    { meta: 1 }
+  );
+
+  if(tx != null && tx.meta != null)
+    return res(Buffer.from(tx.meta, 'hex'));
+
+  return null;
 };
 
 module.exports = TransactionSchema;

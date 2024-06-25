@@ -23,7 +23,7 @@ EntrySchema.statics.saveEntry = async function saveEntry(hash, height, entry) {
 };
 
 EntrySchema.statics.deleteEntry = async function deleteEntry(hash) {
-  return await this.model('Entry').find({ hash }).remove();
+  return await this.model('Entry').findOneAndDelete({ hash });
 };
 
 EntrySchema.statics.getEntries = async function getEntries() {

@@ -9,8 +9,8 @@ const WalletAddressSchema = new Schema({
 
 WalletAddressSchema.index({ address: 1, wallet: 1 });
 
-WalletAddressSchema.statics.getWalletAddresses = function getWalletAddresses() {
-  return this.model('WalletAddress').find({});
+WalletAddressSchema.statics.getWalletAddresses = async function getWalletAddresses() {
+  return await this.model('WalletAddress').find({});
 };
 
 module.exports = WalletAddressSchema;

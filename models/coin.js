@@ -50,53 +50,33 @@ CoinSchema.statics.saveCoins = function saveCoins(key, data, coin, hash, index) 
   }).save();
 };
 
-CoinSchema.statics.getCoins = function getCoins(key) {
-  /*
-  return new Promise((res, rej) => {
-    return this.model('Coin').findOne({ key },
-    (err, coins) => {
-      if (err) {
-        return rej(err);
-      }
-      return coins ? res(coins.data) : res(coins);
-    });
-  });
-*/
-
-return new Promise((res, rej) => {
-  return this.model('Coin').findOne(
+CoinSchema.statics.getCoins = async function getCoins(key) {
+  const coins = await this.model('Coin').findOne(
     { key }
-  ).catch(err => rej(err)).then((coins) => {
-    return coins ? res(coins.data) : res(coins);
-  });
-});
+  );
+
+  if (coins != null)
+    return coins.data;
+
+  return coins;
 };
 
-CoinSchema.statics.hasCoins = function hasCoins(key) {
-  return new Promise((res, rej) => {
-    return this.model('Coin')
-      .findOne({ key })
-      .count((err, count) => {
-        err ? rej(err) : res(count >= 1);
-      });
-  });
+CoinSchema.statics.hasCoins = async function hasCoins(key) {
+  const count = await this.model('Coin').count({ key });
+  return count >= 1;
 };
 
-CoinSchema.statics.hasDupeCoins = function hasDupeCoins(key, height) {
-  return new Promise((res, rej) => {
-    return this.model('Coin')
-      .findOne({
-        key: key,
-        height: { $lte: height }
-      })
-      .count((err, count) => {
-        err ? rej(err) : res(count >= 1);
-      });
+CoinSchema.statics.hasDupeCoins = async function hasDupeCoins(key, height) {
+  const count = await this.model('Coin').count({
+    key: key,
+    height: { $lte: height }
   });
+
+  return count >= 1;
 };
 
-CoinSchema.statics.removeCoins = function removeCoins(key) {
-  return this.model('Coin').find({ key }).remove();
+CoinSchema.statics.removeCoins = async function removeCoins(key) {
+  return await this.model('Coin').findOneAndDelete({ key });
 };
 
 module.exports = CoinSchema;
